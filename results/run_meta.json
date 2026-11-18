@@ -1,0 +1,26 @@
+[
+  {
+    "mock": false,
+    "llm_models": {
+      "orchestrator": "deepseek/deepseek-v4.1-flash-1017",
+      "risk_engine": "moonshotai/kimi-k2.7-code",
+      "policy_mfa": "z-ai/glm-5.3-flashx",
+      "trust_monitor": "moonshotai/kimi-k2.7-code"
+    },
+    "slm_models": {
+      "identity_gate": "llama3.2:1b",
+      "context_retrieval": "mistral:7b",
+      "device_trust": "ministral-3:3b",
+      "entity_verification": "gemma2:2b",
+      "policy_enforcement": "llama3.2:3b"
+    },
+    "slm_substitutions": {},
+    "slm_calls": 101,
+    "llm_calls": 23,
+    "llm_cache_hits": 23,
+    "llm_failures": 0,
+    "degraded_llm_steps": 0,
+    "wall_clock_min": 18.9,
+    "finished": "2026-10-23 16:37"
+  }
+]

@@ -1,0 +1,27 @@
+RAZTA ambiguous-case experiment - instructions for the independent labeller
+===========================================================================
+
+Thank you for helping. Please label the 16 cases in labels.csv (it opens in Excel)
+BEFORE the experiment results are produced or shown to you.
+
+Each row describes one access request: who is really asking, what they want, when,
+from where, and the reason they typed. The story tells you the truth that a security
+system would NOT know.
+
+For each row, write "allow" or "deny" in the column "labeller_label (allow/deny)":
+
+  allow  - the request is made by the account owner, for a genuine work purpose that
+           their role permits, and an organisation would want them to get in
+           (even if extra checks are needed first).
+
+  deny   - anyone other than the account owner is making the request (stolen password,
+           swapped SIM, stolen phone, stolen session), OR the account owner is trying
+           to use a system or data that their role or task does not permit.
+
+Please judge only what SHOULD happen under a sensible organisational policy.
+Do not think about what a computer system could detect, or which passwords, codes or
+keys the person has with them. If you are unsure, choose the answer you think is more
+defensible and explain in "labeller_comment".
+
+Save the file with the same name (labels.csv, CSV format) and return it.
+Labeller name / role: ___Tope Alabi_________________   Date: __23 November 2026________

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAZTA Sign-in</title>
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#ffffff; --ink:#16181d; --muted:#5f6672; --line:#e2e5ea;
+  --local:#0f8b8d; --local-soft:#e3f4f4; --global:#6b4fd8; --global-soft:#eeeafd;
+  --ok:#1f8a4c; --ok-soft:#e5f5ec; --bad:#c8352e; --bad-soft:#fbe9e8; --warn:#b7791f; --warn-soft:#fdf3e1;
+  --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box} html,body{margin:0} body{background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.top{display:flex;align-items:center;gap:14px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.top b{font-size:18px} .top span{color:var(--muted);font-size:12px;display:block}
+.shield{width:34px;height:34px;border-radius:9px;background:var(--global);display:grid;place-items:center;color:#fff;font-weight:800}
+.wrap{display:grid;grid-template-columns:minmax(360px,460px) 1fr 330px;gap:16px;padding:16px;max-width:1500px;margin:0 auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+h2{margin:0 0 4px;font-size:20px} .sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+textarea{resize:vertical;min-height:52px}
+details{margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+summary{cursor:pointer;font-weight:700}
+.btn{display:block;width:100%;margin-top:16px;padding:11px;border:0;border-radius:9px;background:var(--global);color:#fff;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed} .btn.sec{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.msg{padding:10px 12px;border-radius:9px;margin-bottom:12px;font-weight:600}
+.msg.info{background:var(--global-soft);color:var(--global)} .msg.bad{background:var(--bad-soft);color:var(--bad)} .msg.ok{background:var(--ok-soft);color:var(--ok)} .msg.warn{background:var(--warn-soft);color:var(--warn)}
+.stages{display:grid;gap:6px;margin-top:6px}
+.st{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.st .dot{width:10px;height:10px;border-radius:50%;background:#c9ced6;margin-top:5px;flex:none}
+.st.active .dot{background:var(--global);animation:p 1s infinite} .st.done .dot{background:var(--ok)} .st.warn .dot{background:var(--warn)} .st.fail .dot{background:var(--bad)}
+@keyframes p{50%{opacity:.3}}
+.st b{display:block;font-size:13px} .st small{color:var(--muted);font-size:12px}
+.tier{font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:6px}
+.tier.l{background:var(--local-soft);color:var(--local)} .tier.g{background:var(--global-soft);color:var(--global)} .tier.c{background:var(--bg);color:var(--muted)}
+.gauge{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--bad-soft) 0 50%,var(--warn-soft) 50% 80%,var(--ok-soft) 80%);position:relative;margin:8px 0 2px}
+.needle{position:absolute;top:-4px;width:3px;height:20px;background:var(--ink);display:none}
+.scale{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.chal{border:2px solid var(--global);border-radius:12px;padding:14px;margin-top:12px;background:var(--global-soft)}
+.chal h3{margin:0 0 6px;font-size:16px} .chal .row{display:flex;gap:8px;margin-top:8px} .chal .row input{flex:1}
+.chal .row button{padding:9px 14px;border:0;border-radius:8px;background:var(--global);color:#fff;font-weight:700;cursor:pointer}
+.chal .row button.sec{background:#fff;color:var(--ink);border:1px solid var(--line);font-weight:600}
+.timer{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.fx{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px} .fx span{font-family:var(--mono);font-size:12px;padding:3px 8px;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.fx span.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent} .fx span.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.dev{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:#fff}
+.dev h4{margin:0 0 6px;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.dev .screen{background:#10151c;color:#e8f0f7;border-radius:10px;padding:12px;font-family:var(--mono);min-height:58px}
+.dev .code{font-size:26px;letter-spacing:4px}
+.dev .lcd{background:#b9c7a4;color:#1d2a12;border-radius:6px;padding:10px;font-family:var(--mono);font-size:13px;min-height:58px}
+.dev button.act{margin-top:8px;width:100%;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-weight:700}
+.dev button.act.hot{background:var(--global);color:#fff;border-color:transparent;animation:p 1.2s infinite}
+.dev.off{opacity:.45}
+.hold{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted)} .hold input{width:auto}
+.admin{margin-top:12px;font-size:12px} .admin table{width:100%;border-collapse:collapse} .admin td{padding:4px 6px;border-bottom:1px solid var(--line)}
+.users{font-size:12px;color:var(--muted)} .users code{font-family:var(--mono);color:var(--ink)}
+@media (max-width:1100px){.wrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top"><div class="shield">R</div><div><b>Research Demo Console</b><span>Protected resource · every sign-in is decided by RAZTA (Reflexive Agentic Zero Trust Architecture)</span></div></div>
+<div class="wrap">
+  <!-- 1. sign-in -->
+  <section class="card" id="signin">
+    <div id="banner"></div>
+    <h2 id="title">Sign in</h2>
+    <div class="sub" id="subtitle">Enter your credentials. RAZTA will check this access request before the console opens.</div>
+    <div id="form">
+      <label>Username</label>
+      <input id="username" list="userlist" placeholder="firstname.lastname" autocomplete="username">
+      <datalist id="userlist"></datalist>
+      <label>Password</label>
+      <input id="password" type="password" autocomplete="current-password">
+      <details id="ctx"><summary>Context of this sign-in (for the demonstration)</summary>
+        <label>Where you are</label><select id="where"></select>
+        <label>Device you are using</label><select id="device"></select>
+        <label>Time of the request</label><select id="hourMode"><option value="now">Now (this computer's clock)</option></select>
+        <label>Reason for access (optional; RAZTA checks it against tickets, rosters and travel records)</label>
+        <textarea id="reason" placeholder="e.g. Reviewing the demo for ticket RES-701"></textarea>
+      </details>
+      <details><summary>Decision engine</summary>
+        <label>How RAZTA's agents run</label>
+        <select id="engine"><option value="live">Live models (Ollama + OpenRouter), about 40 s</option><option value="simulated">Simulated model replies (fast rehearsal)</option><option value="rules">Rules only, no AI</option></select>
+      </details>
+      <button class="btn" id="go">Sign in</button>
+      <div class="hint users" id="usershint"></div>
+    </div>
+    <div id="chal"></div>
+    <div id="result"></div>
+  </section>
+
+  <!-- 2. RAZTA at work -->
+  <section class="card">
+    <h2>RAZTA is checking the request</h2>
+    <div class="sub" id="reqline">Waiting for a sign-in.</div>
+    <div class="stages" id="stages"></div>
+    <div style="margin-top:12px"><b style="font-size:13px">Trust score T</b> <span id="tval" class="timer"></span>
+      <div class="gauge"><div class="needle" id="needle"></div></div>
+      <div class="scale"><span>0 · HIGH risk</span><span>0.5 · MEDIUM</span><span>0.8 · LOW</span><span>1</span></div></div>
+    <div style="margin-top:12px"><b style="font-size:13px">Authentication RAZTA asked for</b><div class="fx" id="factors"><span>–</span></div></div>
+  </section>
+
+  <!-- 3. the user's devices -->
+  <section>
+    <div class="card" style="padding:14px">
+      <h2 style="font-size:16px">Your devices</h2>
+      <div class="sub" style="margin-bottom:10px">Simulated authenticators. Untick a device to play someone who does not have it (for example, an attacker with a stolen password).</div>
+      <div id="devices"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const STAGES=[["gate","Identity Gate","l","Is this a known user with a valid sign-in token?"],["clr","Context & access history","l","How does this request compare with the user's history?"],["twin","Identity twin","c","The user's normal hours, places, devices"],["det","Device trust","l","Is the device patched, encrypted, attested?"],["rte","Risk & trust engine","g","Combine the signals into one trust score"],["jc","Reason check","g","Check the stated reason against records"],["orch","Orchestrator","g","Arbitrate conflicts; may only tighten"],["pc","Policy & adaptive MFA","g","Pick the policy and the factors to ask for"],["ev","Entity verification","l","Bind the factors to a one-time challenge"],["pe","Policy enforcement","l","Challenge you and verify each answer"],["catm","Continuous trust monitor","g","Keeps checking the session after sign-in"]];
+const NICE={twin_challenge:"Personal question (identity twin)",twin_enrol:"Remember this visit",password:"Password",totp_app:"Authenticator app code",device_cert:"Device certificate",otp_sms:"SMS code",otp_ussd:"USSD code",agent_verify:"Agent check",hw_key:"Security key",biometric:"Fingerprint"};
+let INFO={},rid=null,es=null,factors=[],pending=null,timer=null,user=null,stepup=null;
+const held={phone:true,sim:true,key:true,finger:true,agent:true,memory:true};
+
+function stagesInit(){ $("#stages").innerHTML=STAGES.map(([k,n,t,d])=>`<div class="st" id="st-${k}"><span class="dot"></span><div><b>${n}<span class="tier ${t}">${t==="l"?"local SLM":t==="g"?"global LLM":"code"}</span></b><small id="sm-${k}">${d}</small></div></div>`).join(""); }
+function setStage(k,state,msg){ const el=$("#st-"+k); if(!el) return; el.classList.remove("active","done","warn","fail"); if(state==="factor"||state==="tick") state="active"; if(state!=="idle") el.classList.add(state); if(msg) $("#sm-"+k).textContent=msg; }
+function renderFactors(){ $("#factors").innerHTML=factors.length?factors.map(f=>`<span class="${f.ok===true?"ok":f.ok===false?"bad":""}">${f.ok===true?"✓ ":f.ok===false?"✗ ":""}${esc(NICE[f.name]||f.name)}</span>`).join(""):"<span>–</span>"; }
+
+function devices(){
+  const u=INFO.users?.find(x=>x.id===user)||INFO.users?.[0]; if(!u) return;
+  const en=new Set(u.enrolled); let h="";
+  const box=(id,title,body,on=true)=>`<div class="dev ${held[id]?"":"off"}" id="dev-${id}"><h4>${title}<span class="hold"><input type="checkbox" data-hold="${id}" ${held[id]?"checked":""}> with me</span></h4>${body}</div>`;
+  if(en.has("totp_app")) h+=box("phone","Smartphone · authenticator app",`<div class="screen"><div style="font-size:11px;opacity:.7">RAZTA Authenticator · ${esc(u.id)}</div><div class="code" id="totp">––––––</div><div style="font-size:11px;opacity:.7" id="totpt"></div></div>`);
+  h+=box("sim",u.channel==="ussd_only"?"Feature phone (SIM)":"SIM phone · SMS",`<div class="lcd" id="inbox">No messages</div>`);
+  if(en.has("hw_key")) h+=box("key","Security key (hardware)",`<button class="act" id="btn-key" data-fac="hw_key" disabled>Touch key</button>`);
+  if(en.has("biometric")) h+=box("finger","Fingerprint reader",`<button class="act" id="btn-finger" data-fac="biometric" disabled>Place finger</button>`);
+  if(en.has("agent_verify")) h+=box("agent","Agent network (in person)",`<button class="act" id="btn-agent" data-fac="agent_verify" disabled>Agent confirms my identity</button>`);
+  h+=box("memory","Your memory (what the real user knows)",`<div class="lcd" id="mem" style="white-space:normal">…</div><div style="font-size:11px;opacity:.7;margin-top:4px">Untick “with me” to play an attacker who has the devices but not the memories.</div>`);
+  $("#devices").innerHTML=h||'<div class="sub">Pick a user to see their devices.</div>';
+  memTick();
+  document.querySelectorAll("[data-hold]").forEach(c=>c.onchange=()=>{held[c.dataset.hold]=c.checked;devices();});
+  document.querySelectorAll("button.act").forEach(b=>b.onclick=()=>answer(b.dataset.fac,"ok"));
+  if(pending) highlight(pending);
+  phoneTick();
+}
+async function memTick(){ if(!user||!$("#mem")) return; if(!held.memory){ $("#mem").textContent="(hidden: you are playing someone who does not know this)"; return; }
+  try{ const r=await fetch("/api/portal/memory?user="+encodeURIComponent(user)); if(r.ok){ const d=await r.json();
+    $("#mem").innerHTML=[d.last_task?`Last time I said I worked on: <b>${esc(d.last_task)}</b>`:"No task stored yet (first visit)",d.last_resource?`Last system I opened: <b>${esc(d.last_resource)}</b>`:"",d.last_login_time?`Last sign-in: about <b>${esc(d.last_login_time)}</b>`:""].filter(Boolean).join("<br>"); } }catch(e){} }
+async function phoneTick(){ if(!user||!held.phone||!$("#totp")) return; try{ const r=await fetch("/api/portal/phone?user="+encodeURIComponent(user)); if(r.ok){const d=await r.json(); $("#totp").textContent=d.code.slice(0,3)+" "+d.code.slice(3); $("#totpt").textContent=`new code in ${d.seconds} s`; } }catch(e){} }
+setInterval(phoneTick,1000);
+
+function highlight(f){
+  document.querySelectorAll("button.act").forEach(b=>{b.disabled=true;b.classList.remove("hot")});
+  const map={hw_key:["key","btn-key"],biometric:["finger","btn-finger"],agent_verify:["agent","btn-agent"]};
+  if(map[f]&&held[map[f][0]]&&$("#"+map[f][1])){ const b=$("#"+map[f][1]); b.disabled=false; b.classList.add("hot"); }
+}
+function showChallenge(ev){
+  pending=ev.factor; let left=120; clearInterval(timer);
+  const name=NICE[ev.factor]||ev.factor; let body="";
+  if(ev.auto){ $("#chal").innerHTML=`<div class="chal"><h3>${esc(name)}</h3>${esc(ev.text)}</div>`; pending=null; return; }
+  if(ev.factor==="totp_app") body=`Open the authenticator app on your phone and enter the 6-digit code.<div class="row"><input id="ans" inputmode="numeric" placeholder="123 456"><button id="send">Verify</button></div>`;
+  else if(ev.factor==="otp_sms"){ body=`A code was sent by SMS to your registered phone. Enter it here.<div class="row"><input id="ans" placeholder="6-digit code"><button id="send">Verify</button></div>`; if(held.sim&&$("#inbox")) $("#inbox").innerHTML=`SMS from RAZTA:<br>Your code is <b>${ev.code}</b>`; }
+  else if(ev.factor==="otp_ussd"){ body=`A code was sent to your phone. On a feature phone you reply with a USSD string, for example <code>*347*${ev.code}#</code>. Type the reply exactly as you would dial it.<div class="row"><input id="ans" placeholder="*347*......#"><button id="send">Send</button></div>`; if(held.sim&&$("#inbox")) $("#inbox").innerHTML=`RAZTA: your code is<br><b>${ev.code.slice(0,2)} ${ev.code.slice(2,4)} ${ev.code.slice(4)}</b><br>Reply: *347* code #`; }
+  else if(ev.factor==="twin_challenge") body=`RAZTA asks a question only the real you should know, built from your identity twin:<div style="margin:8px 0;font-size:15px"><b>${esc(ev.question||"")}</b></div>Answer in your own words (English, Pidgin, Yoruba, Hausa or Igbo are fine).<div class="row"><input id="ans" placeholder="your answer"><button id="send">Answer</button></div>`;
+  else if(ev.factor==="twin_enrol") body=`Access granted. ${esc(ev.question||"")}<br><small>RAZTA keeps this in your identity twin and asks about it at your next sign-in.</small><div class="row"><input id="ans" placeholder="e.g. reviewed the ward 3 discharge notes"><button id="send">Save</button></div>`;
+  else if(ev.factor==="hw_key") body=`Touch your security key (right-hand panel).`;
+  else if(ev.factor==="biometric") body=`Place your finger on the fingerprint reader (right-hand panel).`;
+  else if(ev.factor==="agent_verify") body=`Visit a registered agent, who confirms your identity in person (right-hand panel).`;
+  $("#chal").innerHTML=`<div class="chal"><h3>RAZTA needs: ${esc(name)}</h3>${body}<div class="row" style="justify-content:space-between;align-items:center"><span class="timer" id="tleft"></span><button class="btn sec" style="width:auto;margin:0;padding:7px 12px" id="cant">I can't do this</button></div></div>`;
+  if($("#send")){ $("#send").onclick=()=>answer(ev.factor,$("#ans").value); $("#ans").onkeydown=e=>{if(e.key==="Enter")answer(ev.factor,$("#ans").value)}; $("#ans").focus(); }
+  $("#cant").onclick=()=>answer(ev.factor,"no");
+  timer=setInterval(()=>{left--; if($("#tleft")) $("#tleft").textContent=`challenge expires in ${left} s`; if(left<=0) clearInterval(timer);},1000);
+  highlight(ev.factor);
+}
+async function answer(f,v){
+  if(!rid||pending!==f) return; pending=null; clearInterval(timer); highlight(null);
+  $("#chal").innerHTML=`<div class="chal"><h3>${esc(NICE[f]||f)}</h3>Answer sent. Verifying…</div>`;
+  await fetch("/api/portal/answer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({rid,factor:f,value:v})});
+}
+
+function handle(ev){
+  if(ev.type==="request"){ $("#reqline").textContent=`${ev.user} → ${INFO.resource} · from ${ev.where} at ${String(ev.hour).padStart(2,"0")}:xx · ${ev.device} · engine: ${ev.engine}${ev.reason?` · reason: “${ev.reason}”`:""}`; }
+  else if(ev.type==="agent"){
+    setStage(ev.agent,ev.state,ev.msg); const d=ev.data||{};
+    if(d.T!==undefined){ const n=$("#needle"); n.style.display="block"; n.style.left=`calc(${Math.max(0,Math.min(1,d.T))*100}% - 1px)`; $("#tval").textContent=`= ${d.T} → ${d.band} risk`; }
+    if(d.band&&d.T===undefined) $("#tval").textContent=$("#tval").textContent.replace(/→ \w+ risk/,`→ ${d.band} risk`);
+    if(d.mfa){ factors=d.mfa.filter(Boolean).map(n=>({name:n,ok:null})); renderFactors(); }
+    if(ev.state==="factor"&&d.factor){ const f=factors.find(x=>x.name===d.factor); if(f&&d.ok!==null&&d.ok!==undefined){f.ok=d.ok;renderFactors();} }
+  }
+  else if(ev.type==="challenge"){ showChallenge(ev); }
+  else if(ev.type==="result"){
+    const r=ev.data; memTick(); $("#chal").innerHTML=""; document.querySelectorAll(".st.active").forEach(x=>{x.classList.remove("active");x.classList.add(r.decision==="allow"?"done":"fail")});
+    if(r.decision==="allow"){ $("#result").innerHTML=`<div class="msg ok">Access granted. Opening the console (session ${r.ttl} min)…</div>`+admin(r); setTimeout(()=>location.href="/portal/enter?grant="+encodeURIComponent(r.grant),2200); }
+    else { $("#result").innerHTML=`<div class="msg bad">Access denied.</div><div class="hint">That is all a real user would see. The panel below is shown only for the demonstration.</div>`+admin(r); $("#form").style.display="block"; $("#go").disabled=false; }
+  }
+  else if(ev.type==="error"){ $("#result").innerHTML=`<div class="msg bad">${esc(ev.msg)}</div>`; $("#form").style.display="block"; $("#go").disabled=false; }
+  else if(ev.type==="end"){ if(es){es.close();es=null;} }
+}
+function admin(r){
+  const bd=r.breakdown?Object.entries(r.breakdown).map(([k,v])=>`${k} ${v}`).join(" · "):"";
+  return `<details class="admin" open><summary>Decision record (admin view)</summary><table>
+   <tr><td>Decision</td><td><b>${esc(r.decision)}</b> — ${esc(r.reason||"")}</td></tr>
+   ${r.T!=null?`<tr><td>Trust score</td><td>T = ${r.T} (${esc(r.band)})${bd?"<br>"+esc(bd):""}</td></tr>`:""}
+   ${r.policy?`<tr><td>Policy</td><td>${esc(r.policy)}</td></tr>`:""}
+   ${r.mfa?`<tr><td>Factors</td><td>${esc(String(r.mfa).replaceAll("+"," + "))}</td></tr>`:""}
+   ${r.justification?`<tr><td>Reason check</td><td>${esc(r.justification)}</td></tr>`:""}
+   ${r.provisional?`<tr><td>Identity twin</td><td>provisional (fewer than 25 sessions)</td></tr>`:""}
+   ${(r.twin||[]).length?`<tr><td>Personal questions</td><td>${r.twin.map(t=>`${esc(t.question)}<br>→ “${esc(t.answer)}”: <b>${esc(t.verdict)}</b>`).join("<hr style='border:0;border-top:1px solid #ddd'>")}</td></tr>`:""}
+   ${r.twin_stored?`<tr><td>Identity twin</td><td>your answer was stored for the next sign-in</td></tr>`:""}
+   ${r.latency!=null?`<tr><td>Decision time</td><td>${r.latency} s</td></tr>`:""}</table></details>`;
+}
+
+async function start(){
+  user=(stepup?stepup.user:$("#username").value.trim()); if(!user){ $("#username").focus(); return; }
+  factors=[]; renderFactors(); stagesInit(); $("#needle").style.display="none"; $("#tval").textContent=""; $("#result").innerHTML=""; $("#chal").innerHTML="";
+  devices(); $("#go").disabled=true; $("#form").style.display="none";
+  const body=stepup?{password:$("#password").value}:{username:user,password:$("#password").value,where:$("#where").value,device:$("#device").value,reason:$("#reason").value,engine:$("#engine").value,hour:new Date().getHours()};
+  const r=await fetch(stepup?"/api/portal/stepup":"/api/portal/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  if(!r.ok){ handle({type:"error",msg:"Could not start (session ended?). Reload the page."}); return; }
+  rid=(await r.json()).rid;
+  es=new EventSource("/api/portal/stream?rid="+encodeURIComponent(rid));
+  es.onmessage=e=>handle(JSON.parse(e.data));
+  es.onerror=()=>{ if(es){es.close();es=null;} };
+}
+$("#go").onclick=start; $("#password").onkeydown=e=>{if(e.key==="Enter")start()};
+$("#username").oninput=()=>{ const v=$("#username").value.trim(); if(INFO.users?.some(x=>x.id===v)){user=v;devices();} };
+
+const params=new URLSearchParams(location.search);
+const MSG={signed_out:["info","You have signed out."],revoked:["bad","Your session was ended by RAZTA's continuous trust monitor."],expired:["warn","Your session expired. Sign in again."]};
+if(MSG[params.get("msg")]) $("#banner").innerHTML=`<div class="msg ${MSG[params.get("msg")][0]}">${MSG[params.get("msg")][1]}</div>`;
+fetch("/api/portal/info").then(r=>r.json()).then(d=>{
+  INFO=d; stagesInit();
+  $("#userlist").innerHTML=d.users.map(u=>`<option value="${u.id}">`).join("");
+  $("#where").innerHTML=Object.entries(d.locations).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join("");
+  $("#device").innerHTML=Object.entries(d.devices).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join("");
+  if(!d.live_ok){ $('#engine option[value="live"]').disabled=true; $("#engine").value="simulated"; }
+  $("#usershint").innerHTML=`Demo accounts: ${d.users.map(u=>`<code>${u.id}</code>`).join(", ")} · password <code>${esc(d.demo_password)}</code>.<br>bello.m uses a feature phone (USSD); the others have smartphones.`;
+  if(d.stepup){ stepup=d.stepup; user=stepup.user; $("#title").textContent="Verify it's you"; $("#subtitle").textContent=`RAZTA noticed a change in ${stepup.user}'s session and asks for stronger proof before the console stays open.`;
+    $("#username").value=stepup.user; $("#username").disabled=true; document.querySelectorAll("details").forEach(x=>x.style.display="none"); $("#go").textContent="Verify"; }
+  user=user||d.users[0].id; devices(); phoneTick();
+}).catch(e=>{ $("#banner").innerHTML=`<div class="msg bad">Cannot reach the RAZTA server. Start it with: python demo_server.py</div>`; });
+</script>
+</body>
+</html>

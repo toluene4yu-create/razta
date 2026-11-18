@@ -1,0 +1,27 @@
+{
+  "mock": false,
+  "llm_models": {
+    "orchestrator": "deepseek/deepseek-v4.1-flash-1017",
+    "risk_engine": "moonshotai/kimi-k2.7-code",
+    "policy_mfa": "z-ai/glm-5.3-flashx",
+    "trust_monitor": "moonshotai/kimi-k2.7-code",
+    "justification": "deepseek/deepseek-v4.1-flash-1017"
+  },
+  "slm_models": {
+    "identity_gate": "llama3.2:1b",
+    "context_retrieval": "mistral:7b",
+    "device_trust": "ministral-3:3b",
+    "entity_verification": "gemma2:2b",
+    "policy_enforcement": "llama3.2:3b",
+    "twin_question": "gemma2:2b",
+    "twin_judge": "mistral:7b"
+  },
+  "slm_calls": 951,
+  "llm_calls": 6,
+  "llm_cache_hits": 298,
+  "degraded_llm_steps": 0,
+  "substitutions": {},
+  "otp_rule_first": true,
+  "wall_clock_min": 17.9,
+  "finished": "2026-11-05 09:02"
+}

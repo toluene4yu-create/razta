@@ -1,0 +1,6 @@
+condition,name,n,correct,legit_admitted,legit,FRR_pct,FRR_CI,attacks_admitted,attacks,FAR_pct,FAR_CI,by_attacker,mean_questions,mean_latency_s,injections_flagged,questions_rejected,refused_legit,admitted_attacks
+C0,No twin challenge,28,16,14,14,0.0,"(0, 21.5)",12,14,85.7,"(60.1, 96.0)",colleague 2/2 admitted; informed 3/3 admitted; injector 3/3 admitted; thief 4/4 admitted; thief_simswap 0/2 admitted,0,12.1,0,0,,TK01|TK02|TK03|TK04|TK05|TK06|TK07|TK08|TK09|TK10|TK11|TK12
+C1,"Twin, rule judge",28,24,10,14,28.6,"(11.7, 54.6)",0,14,0.0,"(0, 21.5)",colleague 0/2 admitted; informed 0/3 admitted; injector 0/3 admitted; thief 0/4 admitted; thief_simswap 0/2 admitted,1.27,0.2,3,0,TA07|TA08|TA11|TA12,
+C2,"Twin, model judge",28,26,14,14,0.0,"(0, 21.5)",2,14,14.3,"(4.0, 39.9)",colleague 0/2 admitted; informed 1/3 admitted; injector 0/3 admitted; thief 1/4 admitted; thief_simswap 0/2 admitted,1.42,8.3,3,0,,TK01|TK09
+C3,"Twin, model judge, guards off",28,23,14,14,0.0,"(0, 21.5)",5,14,35.7,"(16.3, 61.2)",colleague 0/2 admitted; informed 1/3 admitted; injector 3/3 admitted; thief 1/4 admitted; thief_simswap 0/2 admitted,1.5,0.8,0,0,,TK01|TK09|TK10|TK11|TK12
+C4,"Twin, hybrid judge",28,28,14,14,0.0,"(0, 21.5)",0,14,0.0,"(0, 21.5)",colleague 0/2 admitted; informed 0/3 admitted; injector 0/3 admitted; thief 0/4 admitted; thief_simswap 0/2 admitted,1.35,0.0,3,0,,

@@ -1,0 +1,17 @@
+{
+  "mock": false,
+  "llm_models": {
+    "orchestrator": "deepseek/deepseek-v4.1-flash-1017",
+    "risk_engine": "moonshotai/kimi-k2.7-code",
+    "policy_mfa": "z-ai/glm-5.3-flashx",
+    "trust_monitor": "moonshotai/kimi-k2.7-code",
+    "justification": "deepseek/deepseek-v4.1-flash-1017"
+  },
+  "slm_calls": 1535,
+  "llm_calls": 56,
+  "llm_cache_hits": 577,
+  "degraded_llm_steps": 59,
+  "deadline_s": 180,
+  "wall_clock_min": 9.7,
+  "finished": "2026-10-26 18:24"
+}

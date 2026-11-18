@@ -1,0 +1,17 @@
+id,label,RBA,RAZTA-rules,RAZTA-rules+regex,RAZTA-models,RAZTA-models+tighten,RAZTA-models+bounded
+H01,allow,allow,allow,allow,deny,deny,deny
+H02,deny,deny,deny,deny,deny,deny,deny
+H03,allow,allow,allow,allow,allow,allow,allow
+H04,deny,allow,allow,deny,deny,deny,deny
+H05,deny,allow,allow,allow,deny,deny,deny
+H06,allow,allow,allow,allow,deny,deny,deny
+H07,allow,deny,deny,allow,deny,deny,allow
+H08,deny,deny,deny,deny,deny,deny,deny
+H09,allow,allow,allow,allow,allow,allow,allow
+H10,deny,deny,deny,deny,deny,deny,deny
+H11,deny,allow,allow,allow,allow,allow,deny
+H12,deny,allow,deny,deny,deny,deny,deny
+H13,deny,deny,deny,deny,deny,deny,deny
+H14,allow,allow,allow,deny,allow,deny,deny
+H15,deny,deny,deny,deny,deny,deny,deny
+H16,deny,allow,allow,allow,allow,allow,allow
